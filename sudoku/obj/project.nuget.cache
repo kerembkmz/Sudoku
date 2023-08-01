@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "tZtSxrlTw9pr94Z/y7l7zlBPamWcqH/ZyGYw5BMTJlyoSSHF/SmG1zlYF5+1ehVmrnlzVffgff0HoMPlijG2Sw==",
+  "success": true,
+  "projectFilePath": "/Users/keremsmacbook/Desktop/gitHub/Sudoku/sudoku/sudoku/sudoku.csproj",
+  "expectedPackageFiles": [
+    "/Users/keremsmacbook/.nuget/packages/raylib-cs/4.5.0.3/raylib-cs.4.5.0.3.nupkg.sha512",
+    "/Users/keremsmacbook/.nuget/packages/system.numerics.vectors/4.5.0/system.numerics.vectors.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
