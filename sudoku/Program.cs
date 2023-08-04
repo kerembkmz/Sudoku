@@ -16,6 +16,8 @@ namespace SudokuVisualization
         {
             Raylib.InitWindow(screenWidth, screenHeight, "Sudoku Board");
             sudokuBoard.FillRandomBoard(); //Generate the board
+            sudokuBoard.hideRandomBoard(60); //Hide the wanted number of cells.
+
 
             while (!Raylib.WindowShouldClose())
             {
@@ -51,8 +53,9 @@ namespace SudokuVisualization
 
                     // Draw the number in each cell
                     int number = sudokuBoard.GetBoardValue(row, col);
+                    bool hideOrNot = sudokuBoard.isFilled(row, col);
 
-                    if (number != 0)
+                    if (number != 0 && !hideOrNot)
                     {
                         Raylib.DrawText(number.ToString(), x, y, 20, Color.BLACK);
                     }

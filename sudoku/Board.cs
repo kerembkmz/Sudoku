@@ -29,7 +29,7 @@ public class Board
 
 
     //// check if the cell is already filled
-    public static bool isFilled(bool[,] constantCells, int row, int col)
+    public bool isFilled(int row, int col)
     {
         return constantCells[row, col];
     }
@@ -74,7 +74,33 @@ public class Board
         return true;
     }
 
+    private void HideRandomCells(int numCellsToHide)
+    {
+        if (numCellsToHide <= 0 || numCellsToHide >= 81)
+        {
+            throw new ArgumentOutOfRangeException("numCellsToHide", "Number of cells to hide must be between 1 and 80.");
+        }
 
+        int cellsHidden = 0;
+
+        // For preventing the case where [4,4] comes twice, we will check for the condition.
+        while (cellsHidden < numCellsToHide)
+        {
+            int randomRow = random.Next(9);
+            int randomCol = random.Next(9);
+
+            if (!constantCells[randomRow, randomCol])
+            {
+                constantCells[randomRow, randomCol] = true;
+                cellsHidden++;
+            }
+        }
+    }
+
+    public void hideRandomBoard(int numCellsToHide)
+    {
+        HideRandomCells(numCellsToHide);
+    }
 
     // Fill the board.
     public void FillRandomBoard()
@@ -151,6 +177,8 @@ public class Board
 
         return randomOrder;
     }
+
+
 
 
 }
