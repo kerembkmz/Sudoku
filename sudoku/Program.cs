@@ -41,6 +41,14 @@ namespace SudokuVisualization
 
                 Raylib.DrawLine(x, 0, x, screenHeight, Color.BLACK);
                 Raylib.DrawLine(0, y, screenWidth, y, Color.BLACK);
+
+                // adding drawings to the 3x3 squares for easier visualization.
+                Raylib.DrawLine(3 * cellSize, 0, 3 * cellSize, screenHeight, Color.BLUE);
+                Raylib.DrawLine(6 * cellSize, 0, 6 * cellSize, screenHeight, Color.BLUE);
+
+                Raylib.DrawLine(0 , 3*cellSize , screenWidth , 3*cellSize, Color.BLUE);
+                Raylib.DrawLine(0 , 6*cellSize , screenWidth, 6*cellSize, Color.BLUE);
+
             }
 
             for (int row = 0; row < boardSize; row++)
