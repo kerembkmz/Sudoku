@@ -6,6 +6,7 @@ public class Board
     //create 9x9 matrix
     private int[,] board = new int[9, 9];
     private bool[,] constantCells = new bool[9, 9];
+    private bool[,] userAddedCells = new bool[9, 9];
     private static Random random = new Random();
 
     public Board()
@@ -33,6 +34,11 @@ public class Board
     {
         return constantCells[row, col];
     }
+
+    public bool isFilledUser(int row, int col) {
+        return userAddedCells[row, col];
+    }
+
 
 
     //each number must appear only once (1 to 9), in each row and in each column.
@@ -77,6 +83,7 @@ public class Board
     public void SetBoardValue(int row, int col, int num) {
         board[row, col] = num;
         constantCells[row, col] = false;
+        userAddedCells[row, col] = true;
     }
 
     private void HideRandomCells(int numCellsToHide)

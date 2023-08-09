@@ -94,10 +94,18 @@ namespace SudokuVisualization
                     // Draw the number in each cell
                     int number = sudokuBoard.GetBoardValue(row, col);
                     bool hideOrNot = sudokuBoard.isFilled(row, col);
-
+                    bool userOrNot = sudokuBoard.isFilledUser(row, col);
                     if (number != 0 && !hideOrNot)
                     {
-                        Raylib.DrawText(number.ToString(), x, y, 20, Color.BLACK);
+                        if (userOrNot)
+                        {
+                            Raylib.DrawText(number.ToString(), x, y, 20, Color.DARKGRAY);
+                        }
+                        else
+                        {
+                            Raylib.DrawText(number.ToString(), x, y, 20, Color.BLACK);
+
+                        }
                     }
                 }
             }
@@ -112,7 +120,7 @@ namespace SudokuVisualization
                     Console.WriteLine("Mouse Left Button Pressed");
                     Console.WriteLine($"Clicked Cell: Row {clickedRow}, Col {clickedCol}");
 
-                    if (sudokuBoard.isFilled(clickedRow,clickedCol) && selectedNumber != -1)
+                    if ((sudokuBoard.isFilled(clickedRow,clickedCol) || sudokuBoard.isFilledUser(clickedRow,clickedCol ))&& selectedNumber != -1)
                     {
                         Console.WriteLine($"Setting Board Value: Row {clickedRow}, Col {clickedCol}, Number {selectedNumber}");
                         sudokuBoard.SetBoardValue(clickedRow, clickedCol, selectedNumber);
