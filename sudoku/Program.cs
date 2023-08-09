@@ -16,7 +16,7 @@ namespace SudokuVisualization
         {
             Raylib.InitWindow(screenWidth, screenHeight, "Sudoku Board");
             sudokuBoard.FillRandomBoard(); //Generate the board
-            sudokuBoard.hideRandomBoard(60); //Hide the wanted number of cells.
+            sudokuBoard.hideRandomBoard(1); //Hide the wanted number of cells.
 
 
             while (!Raylib.WindowShouldClose())
