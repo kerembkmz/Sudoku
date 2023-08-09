@@ -14,6 +14,7 @@ namespace SudokuVisualization
         private static int cellSize = 40;
         private static Board sudokuBoard = new Board();
         private static int selectedNumber = -1;
+        private static bool safeForUser;
 
         public static void Main()
         {
@@ -99,7 +100,14 @@ namespace SudokuVisualization
                     {
                         if (userOrNot)
                         {
-                            Raylib.DrawText(number.ToString(), x, y, 20, Color.DARKGRAY);
+                            //Console.WriteLine($"safeForUser second check {safeForUser}");
+                            if (safeForUser)
+                            {
+                                Raylib.DrawText(number.ToString(), x, y, 20, Color.DARKGRAY);
+                            }
+                            else if(!safeForUser){
+                                Raylib.DrawText(number.ToString(), x, y, 20, Color.RED);
+                            }
                         }
                         else
                         {
@@ -111,18 +119,28 @@ namespace SudokuVisualization
             }
             if (Raylib.GetMouseX() < boardSize * cellSize && Raylib.GetMouseY() < boardSize * cellSize)
             {
+
+                
+
+                // ... Initialize the board, constantCells, and userAddedCells ...
+
+                // Create the new board based on constantCells and userAddedCells
+                
+
                 // Calculate clicked row and column indices
                 int clickedRow = Raylib.GetMouseY() / cellSize;
                 int clickedCol = Raylib.GetMouseX() / cellSize;
 
                 if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
                 {
-                    Console.WriteLine("Mouse Left Button Pressed");
-                    Console.WriteLine($"Clicked Cell: Row {clickedRow}, Col {clickedCol}");
+                    //Console.WriteLine("Mouse Left Button Pressed");
+                    //Console.WriteLine($"Clicked Cell: Row {clickedRow}, Col {clickedCol}");
 
                     if ((sudokuBoard.isFilled(clickedRow,clickedCol) || sudokuBoard.isFilledUser(clickedRow,clickedCol ))&& selectedNumber != -1)
                     {
-                        Console.WriteLine($"Setting Board Value: Row {clickedRow}, Col {clickedCol}, Number {selectedNumber}");
+                        //Console.WriteLine($"Setting Board Value: Row {clickedRow}, Col {clickedCol}, Number {selectedNumber}");
+                        safeForUser =  sudokuBoard.IsValidPlacement(clickedRow, clickedCol, selectedNumber);
+                        //Console.WriteLine($"safeForUser {safeForUser}");
                         sudokuBoard.SetBoardValue(clickedRow, clickedCol, selectedNumber);
                     }
                 }

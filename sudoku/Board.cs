@@ -8,6 +8,8 @@ public class Board
     private bool[,] constantCells = new bool[9, 9];
     private bool[,] userAddedCells = new bool[9, 9];
     private static Random random = new Random();
+    private bool safeForUser = false;
+
 
     public Board()
     {
@@ -19,6 +21,24 @@ public class Board
                 constantCells[row, col] = false;
             }
         }
+    }
+
+    public int[,] CreateNewBoardFromCells()
+    {
+        int[,] newBoard = new int[9, 9];
+
+        for (int row = 0; row < 9; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                if (!constantCells[row, col] || userAddedCells[row, col])
+                {
+                    newBoard[row, col] = board[row, col];
+                }
+            }
+        }
+
+        return newBoard;
     }
 
     // Get the value of the cell in the specified row and column
@@ -80,10 +100,94 @@ public class Board
         return true;
     }
 
+    public bool isSafeForUser(int[,] board2, int row, int col, int value)
+    {
+        /*
+
+               for (int row1 = 0; row1 < 9; row1++)
+                {
+                    for (int col1 = 0; col1 < 9; col1++)
+                    {
+                       Console.Write(board2[row1, col1] + " ");
+                    }
+                        Console.WriteLine();
+                }
+
+        Console.WriteLine("-----------------------------------------");
+
+                for (int row1 = 0; row1 < 9; row1++)
+                {
+                    for (int col1 = 0; col1 < 9; col1++)
+                    {
+                        Console.Write(board[row1, col1] + " ");
+                    }
+                    Console.WriteLine();
+               }
+        */
+
+//*
+        for (int i = 0; i < 9; i++)
+        {
+            if (board2[row, i] == value)
+            {
+                Console.WriteLine("Came Here 1");
+                return false;
+            }
+        }
+
+        //check for col
+        for (int i = 0; i < 9; i++)
+        {
+            if (board2[i, col] == value)
+            {
+                Console.WriteLine("Came Here 2 ");
+                return false;
+            }
+        }
+
+        //check for 3x3 box
+        int startRow = row - row % 3;
+        int startCol = col - col % 3;
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (board2[startRow + i, startCol + j] == value)
+                {
+                    Console.WriteLine("Came Here 3 ");
+                    return false;
+                }
+            }
+        }
+//*/
+
+
+        return true;
+    }
+
+
+
+
+
+
+
     public void SetBoardValue(int row, int col, int num) {
         board[row, col] = num;
         constantCells[row, col] = false;
         userAddedCells[row, col] = true;
+    }
+    public bool IsValidPlacement(int row, int col, int num) {
+        int[,] board2 = CreateNewBoardFromCells();
+        if (isSafeForUser(board2, row, col, num))
+        {
+            safeForUser = true;
+            return safeForUser;
+        }
+        else
+        {
+            safeForUser = false;
+            return safeForUser;
+        }
     }
 
     private void HideRandomCells(int numCellsToHide)
