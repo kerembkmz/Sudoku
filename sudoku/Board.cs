@@ -74,6 +74,11 @@ public class Board
         return true;
     }
 
+    public void SetBoardValue(int row, int col, int num) {
+        board[row, col] = num;
+        constantCells[row, col] = false;
+    }
+
     private void HideRandomCells(int numCellsToHide)
     {
         if (numCellsToHide <= 0 || numCellsToHide >= 81)

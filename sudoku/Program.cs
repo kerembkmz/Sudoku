@@ -1,22 +1,25 @@
 ﻿using System;
 using Raylib_cs;
 using sudoku;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SudokuVisualization
 {
     public class Program
     {
-        private static int screenWidth = 360;
-        private static int screenHeight = 360;
+
+        private static int screenWidth = 500;
+        private static int screenHeight = 500;
         private static int boardSize = 9;
         private static int cellSize = 40;
-        private static Board sudokuBoard = new Board(); 
+        private static Board sudokuBoard = new Board();
+        private static int selectedNumber = -1;
 
         public static void Main()
         {
             Raylib.InitWindow(screenWidth, screenHeight, "Sudoku Board");
             sudokuBoard.FillRandomBoard(); //Generate the board
-            sudokuBoard.hideRandomBoard(1); //Hide the wanted number of cells.
+            sudokuBoard.hideRandomBoard(60); //Hide the wanted number of cells.
 
 
             while (!Raylib.WindowShouldClose())
@@ -25,29 +28,58 @@ namespace SudokuVisualization
                 Raylib.ClearBackground(Color.WHITE);
 
                 DrawSudokuBoard();
-
+                DrawNumberSelectionUI();
                 Raylib.EndDrawing();
             }
 
             Raylib.CloseWindow();
         }
 
+        private static void DrawNumberSelectionUI()
+        {
+            int numberButtonSize = 40;
+            int numberButtonMargin = 5;
+            int numberButtonY = screenHeight - numberButtonSize - numberButtonMargin;
+
+            for (int num = 1; num <= 9; num++)
+            {
+                int numberButtonX = num * (numberButtonSize + numberButtonMargin) - numberButtonSize;
+
+                if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) &&
+                    Raylib.GetMouseY() >= numberButtonY && Raylib.GetMouseY() <= numberButtonY + numberButtonSize &&
+                    Raylib.GetMouseX() >= numberButtonX && Raylib.GetMouseX() <= numberButtonX + numberButtonSize)
+                {
+                    selectedNumber = num;
+                }
+
+                Color buttonColor = (selectedNumber == num) ? Color.GRAY : Color.LIGHTGRAY;
+
+                Raylib.DrawRectangle(numberButtonX, numberButtonY, numberButtonSize, numberButtonSize, buttonColor);
+                Raylib.DrawText(num.ToString(), numberButtonX + 10, numberButtonY + 10, 20, Color.BLACK);
+            }
+        }
+
+
+
+
         private static void DrawSudokuBoard()
         {
+            
+
             for (int i = 0; i <= boardSize; i++)
             {
                 int x = i * cellSize;
                 int y = i * cellSize;
 
-                Raylib.DrawLine(x, 0, x, screenHeight, Color.BLACK);
-                Raylib.DrawLine(0, y, screenWidth, y, Color.BLACK);
+                Raylib.DrawLine(x, 0, x, 360, Color.BLACK);
+                Raylib.DrawLine(0, y, 360, y, Color.BLACK);
 
                 // adding drawings to the 3x3 squares for easier visualization.
-                Raylib.DrawLine(3 * cellSize, 0, 3 * cellSize, screenHeight, Color.BLUE);
-                Raylib.DrawLine(6 * cellSize, 0, 6 * cellSize, screenHeight, Color.BLUE);
+                Raylib.DrawLine(3 * cellSize, 0, 3 * cellSize, 360, Color.BLUE);
+                Raylib.DrawLine(6 * cellSize, 0, 6 * cellSize, 360, Color.BLUE);
 
-                Raylib.DrawLine(0 , 3*cellSize , screenWidth , 3*cellSize, Color.BLUE);
-                Raylib.DrawLine(0 , 6*cellSize , screenWidth, 6*cellSize, Color.BLUE);
+                Raylib.DrawLine(0 , 3*cellSize , 360 , 3*cellSize, Color.BLUE);
+                Raylib.DrawLine(0 , 6*cellSize , 360, 6*cellSize, Color.BLUE);
 
             }
 
@@ -69,6 +101,26 @@ namespace SudokuVisualization
                     }
                 }
             }
+            if (Raylib.GetMouseX() < boardSize * cellSize && Raylib.GetMouseY() < boardSize * cellSize)
+            {
+                // Calculate clicked row and column indices
+                int clickedRow = Raylib.GetMouseY() / cellSize;
+                int clickedCol = Raylib.GetMouseX() / cellSize;
+
+                if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
+                {
+                    Console.WriteLine("Mouse Left Button Pressed");
+                    Console.WriteLine($"Clicked Cell: Row {clickedRow}, Col {clickedCol}");
+
+                    if (sudokuBoard.isFilled(clickedRow,clickedCol) && selectedNumber != -1)
+                    {
+                        Console.WriteLine($"Setting Board Value: Row {clickedRow}, Col {clickedCol}, Number {selectedNumber}");
+                        sudokuBoard.SetBoardValue(clickedRow, clickedCol, selectedNumber);
+                    }
+                }
+            }
+        }
+       
         }
     }
-}
+
