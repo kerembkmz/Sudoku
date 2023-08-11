@@ -15,12 +15,19 @@ namespace SudokuVisualization
         private static Board sudokuBoard = new Board();
         private static int selectedNumber = -1;
         private static bool safeForUser;
+        private static int totalTryNumber = 3;
+        private static bool userCanPlay = true;
+        private static bool sudokuCompleted = false;
+        private static int filledByUser = 0;
+        private static int totalHiddenNum = 1;
+
+
 
         public static void Main()
         {
             Raylib.InitWindow(screenWidth, screenHeight, "Sudoku Board");
             sudokuBoard.FillRandomBoard(); //Generate the board
-            sudokuBoard.hideRandomBoard(60); //Hide the wanted number of cells.
+            sudokuBoard.hideRandomBoard(totalHiddenNum); //Hide the wanted number of cells.
 
 
             while (!Raylib.WindowShouldClose())
@@ -29,11 +36,40 @@ namespace SudokuVisualization
                 Raylib.ClearBackground(Color.WHITE);
 
                 DrawSudokuBoard();
+                DrawGameIsCompletedWithSuccess();
                 DrawNumberSelectionUI();
+                DrawFalseTryOutOfOppurtunity();
                 Raylib.EndDrawing();
             }
 
             Raylib.CloseWindow();
+        }
+
+        private static void DrawFalseTryOutOfOppurtunity() {
+
+            if (!sudokuCompleted)
+            {
+                if (sudokuBoard.GetWrongNumber() < totalTryNumber)
+                {
+                    string output = "Wrong tries:" + sudokuBoard.GetWrongNumber() + "/" + totalTryNumber;
+                    Raylib.DrawText(output, 20, 400, 20, Color.BLACK);
+                }
+                else
+                {
+                    string output = "Failed to complete the SUDOKU puzzle, 3 wrong answers already.";
+                    Raylib.DrawText(output, 20, 400, 15, Color.BLACK);
+                    userCanPlay = false;
+
+                }
+            }
+        }
+
+        private static void DrawGameIsCompletedWithSuccess() {
+            if(totalHiddenNum == filledByUser) {
+                sudokuCompleted = true;
+                string output = "Sudoku completed succesfully";
+                Raylib.DrawText(output, 20, 400, 20, Color.BLACK);
+            }
         }
 
         private static void DrawNumberSelectionUI()
@@ -105,7 +141,9 @@ namespace SudokuVisualization
                             {
                                 Raylib.DrawText(number.ToString(), x, y, 20, Color.DARKGRAY);
                             }
-                            else if(!safeForUser){
+                            else if (!safeForUser)
+                            {
+
                                 Raylib.DrawText(number.ToString(), x, y, 20, Color.RED);
                             }
                         }
@@ -115,19 +153,15 @@ namespace SudokuVisualization
 
                         }
                     }
+                    if (sudokuCompleted) {
+                        Raylib.DrawText(number.ToString(), x, y, 20, Color.GREEN);
+                    }
+
                 }
             }
-            if (Raylib.GetMouseX() < boardSize * cellSize && Raylib.GetMouseY() < boardSize * cellSize)
+            if (Raylib.GetMouseX() < boardSize * cellSize && Raylib.GetMouseY() < boardSize * cellSize && userCanPlay)
             {
 
-                
-
-                // ... Initialize the board, constantCells, and userAddedCells ...
-
-                // Create the new board based on constantCells and userAddedCells
-                
-
-                // Calculate clicked row and column indices
                 int clickedRow = Raylib.GetMouseY() / cellSize;
                 int clickedCol = Raylib.GetMouseX() / cellSize;
 
@@ -136,10 +170,16 @@ namespace SudokuVisualization
                     //Console.WriteLine("Mouse Left Button Pressed");
                     //Console.WriteLine($"Clicked Cell: Row {clickedRow}, Col {clickedCol}");
 
-                    if ((sudokuBoard.isFilled(clickedRow,clickedCol) || sudokuBoard.isFilledUser(clickedRow,clickedCol ))&& selectedNumber != -1)
+                    if ((sudokuBoard.isFilled(clickedRow,clickedCol) || sudokuBoard.isFilledUser(clickedRow,clickedCol )) && selectedNumber != -1)
                     {
                         //Console.WriteLine($"Setting Board Value: Row {clickedRow}, Col {clickedCol}, Number {selectedNumber}");
                         safeForUser =  sudokuBoard.IsValidPlacement(clickedRow, clickedCol, selectedNumber);
+                        if (!safeForUser) {
+                            sudokuBoard.incrementWrongNumber();
+                        }
+                        if (safeForUser) {
+                            filledByUser += 1;
+                        }
                         //Console.WriteLine($"safeForUser {safeForUser}");
                         sudokuBoard.SetBoardValue(clickedRow, clickedCol, selectedNumber);
                     }

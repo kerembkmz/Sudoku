@@ -1,14 +1,19 @@
 ﻿using System;
+
+
 namespace sudoku;
+
+
 
 public class Board
 {
-    //create 9x9 matrix
     private int[,] board = new int[9, 9];
     private bool[,] constantCells = new bool[9, 9];
     private bool[,] userAddedCells = new bool[9, 9];
-    private static Random random = new Random();
+    private Random random = new Random();
     private bool safeForUser = false;
+    private int totalWrongAnswer = 0;
+
 
 
     public Board()
@@ -100,6 +105,15 @@ public class Board
         return true;
     }
 
+    public void incrementWrongNumber()
+    {
+        totalWrongAnswer += 1;
+    }
+
+    public int GetWrongNumber() {
+        return totalWrongAnswer;
+    }
+
     public bool isSafeForUser(int[,] board2, int row, int col, int value)
     {
         /*
@@ -176,6 +190,7 @@ public class Board
         constantCells[row, col] = false;
         userAddedCells[row, col] = true;
     }
+
     public bool IsValidPlacement(int row, int col, int num) {
         int[,] board2 = CreateNewBoardFromCells();
         if (isSafeForUser(board2, row, col, num))
@@ -294,6 +309,30 @@ public class Board
         return randomOrder;
     }
 
+
+    public bool IsSudokuCompleted()
+    {
+        for (int row = 0; row < 9; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                bool hideOrNot = isFilled(row, col);
+                bool userOrNot = isFilledUser(row, col);
+                int cellValue = GetBoardValue(row, col);
+
+                if ((!hideOrNot || !userOrNot))
+                {
+                    Console.WriteLine("Hide or not " + hideOrNot);
+                    Console.WriteLine("user or not " + userOrNot);
+                    Console.WriteLine("Came here returns false");
+                    return false;
+
+                }
+            }
+        }
+        Console.WriteLine("came here returns true");
+        return true;
+    }
 
 
 
