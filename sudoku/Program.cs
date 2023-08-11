@@ -20,6 +20,7 @@ namespace SudokuVisualization
         private static bool sudokuCompleted = false;
         private static int filledByUser = 0;
         private static int totalHiddenNum = 1;
+        private static Board sudokuBoard2 = new Board(); 
 
 
 
@@ -28,6 +29,7 @@ namespace SudokuVisualization
             Raylib.InitWindow(screenWidth, screenHeight, "Sudoku Board");
             sudokuBoard.FillRandomBoard(); //Generate the board
             sudokuBoard.hideRandomBoard(totalHiddenNum); //Hide the wanted number of cells.
+            sudokuBoard2 = sudokuBoard.ReturnBoardFromCells(sudokuBoard);
 
 
             while (!Raylib.WindowShouldClose())
@@ -119,14 +121,42 @@ namespace SudokuVisualization
 
             }
 
-            
-        }
+            for (int row = 0; row < boardSize; row++)
+            {
+                for (int col = 0; col < boardSize; col++)
+                {
+
+                    int x = col * cellSize + cellSize / 2 + 400;
+                    int y = row * cellSize + cellSize / 2 + 20;
+                    
+                    int number = sudokuBoard2.GetBoardValue(row, col);
+                    bool hideOrNot = sudokuBoard2.isFilled(row, col);
+
+                    if (number != 0 && !hideOrNot) {
+                        Raylib.DrawText(number.ToString(), x - 5, y - 10, 20, Color.BLACK);
+                    }
+                }
+            }
+
+
+
+                }
 
 
 
         private static void DrawSudokuBoard()
         {
-            
+
+            /*
+            for (int row1 = 0; row1 < 9; row1++)
+            {
+                for (int col1 = 0; col1 < 9; col1++)
+                {
+                    Console.Write(sudokuBoard2.GetBoardValue(row1,col1) + " ");
+                }
+                Console.WriteLine();
+            }
+            */
 
             for (int i = 0; i <= boardSize; i++)
             {
@@ -164,22 +194,22 @@ namespace SudokuVisualization
                             //Console.WriteLine($"safeForUser second check {safeForUser}");
                             if (safeForUser)
                             {
-                                Raylib.DrawText(number.ToString(), x, y, 20, Color.DARKGRAY);
+                                Raylib.DrawText(number.ToString(), x + 5, y + 10, 20, Color.DARKGRAY);
                             }
                             else if (!safeForUser)
                             {
 
-                                Raylib.DrawText(number.ToString(), x, y, 20, Color.RED);
+                                Raylib.DrawText(number.ToString(), x + 5, y + 10, 20, Color.RED);
                             }
                         }
                         else
                         {
-                            Raylib.DrawText(number.ToString(), x, y, 20, Color.BLACK);
+                            Raylib.DrawText(number.ToString(), x + 5, y + 10, 20, Color.BLACK);
 
                         }
                     }
                     if (sudokuCompleted) {
-                        Raylib.DrawText(number.ToString(), x, y, 20, Color.GREEN);
+                        Raylib.DrawText(number.ToString(), x + 5, y + 10, 20, Color.GREEN);
                     }
 
                 }

@@ -46,6 +46,26 @@ public class Board
         return newBoard;
     }
 
+    public Board ReturnBoardFromCells(Board board1)
+    {
+        Board newBoard = new Board();
+
+        for (int row = 0; row < 9; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                if (!constantCells[row, col] || userAddedCells[row, col])
+                {
+                    newBoard.SetBoardValue(row, col, board1.GetBoardValue(row,col)); 
+                }
+            }
+        }
+
+        return newBoard;
+    }
+
+
+
     // Get the value of the cell in the specified row and column
     // for writing it in the drawing board.
     public int GetBoardValue(int row, int col)
