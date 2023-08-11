@@ -8,7 +8,7 @@ namespace SudokuVisualization
     public class Program
     {
 
-        private static int screenWidth = 500;
+        private static int screenWidth = 800;
         private static int screenHeight = 500;
         private static int boardSize = 9;
         private static int cellSize = 40;
@@ -36,6 +36,7 @@ namespace SudokuVisualization
                 Raylib.ClearBackground(Color.WHITE);
 
                 DrawSudokuBoard();
+                DrawSudokuBoard2();
                 DrawGameIsCompletedWithSuccess();
                 DrawNumberSelectionUI();
                 DrawFalseTryOutOfOppurtunity();
@@ -97,6 +98,30 @@ namespace SudokuVisualization
         }
 
 
+        private static void DrawSudokuBoard2()
+        {
+
+
+            for (int i = 0; i <= boardSize; i++)
+            {
+                int x = i * cellSize ;
+                int y = i * cellSize ;
+
+                Raylib.DrawLine(400+x, 20, 400+x, 380, Color.BLACK);
+                Raylib.DrawLine(400, y+20, 760, y+20, Color.BLACK);
+
+                // adding drawings to the 3x3 squares for easier visualization.
+                Raylib.DrawLine(3 * cellSize + 400, 20, 3 * cellSize + 400, 380, Color.BLUE);
+                Raylib.DrawLine(6 * cellSize + 400, 20, 6 * cellSize + 400, 380, Color.BLUE);
+
+                Raylib.DrawLine(400, 3 * cellSize + 20, 760, 3 * cellSize + 20, Color.BLUE);
+                Raylib.DrawLine(400, 6 * cellSize + 20, 760, 6 * cellSize + 20, Color.BLUE);
+
+            }
+
+            
+        }
+
 
 
         private static void DrawSudokuBoard()
@@ -108,15 +133,15 @@ namespace SudokuVisualization
                 int x = i * cellSize;
                 int y = i * cellSize;
 
-                Raylib.DrawLine(x, 0, x, 360, Color.BLACK);
-                Raylib.DrawLine(0, y, 360, y, Color.BLACK);
+                Raylib.DrawLine(x + 10, 20, x + 10, 380, Color.BLACK);
+                Raylib.DrawLine(10, y + 20, 370, y + 20, Color.BLACK);
 
                 // adding drawings to the 3x3 squares for easier visualization.
-                Raylib.DrawLine(3 * cellSize, 0, 3 * cellSize, 360, Color.BLUE);
-                Raylib.DrawLine(6 * cellSize, 0, 6 * cellSize, 360, Color.BLUE);
+                Raylib.DrawLine(3 * cellSize + 10, 20, 3 * cellSize + 10, 380, Color.BLUE);
+                Raylib.DrawLine(6 * cellSize + 10, 20, 6 * cellSize + 10, 380, Color.BLUE);
 
-                Raylib.DrawLine(0 , 3*cellSize , 360 , 3*cellSize, Color.BLUE);
-                Raylib.DrawLine(0 , 6*cellSize , 360, 6*cellSize, Color.BLUE);
+                Raylib.DrawLine(10 , 3*cellSize +20, 370 , 3*cellSize+20, Color.BLUE);
+                Raylib.DrawLine(10 , 6*cellSize +20, 370, 6*cellSize+20, Color.BLUE);
 
             }
 
