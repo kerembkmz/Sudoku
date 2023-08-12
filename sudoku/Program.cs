@@ -18,8 +18,10 @@ namespace SudokuVisualization
         private static int totalTryNumber = 3;
         private static bool userCanPlay = true;
         private static bool sudokuCompleted = false;
+        private static bool sudokuCompleted2 = false;
         private static int filledByUser = 0;
-        private static int totalHiddenNum = 1;
+        private static int filledByUser2 = 0;
+        private static int totalHiddenNum = 5;
         private static Board sudokuBoard2 = new Board(); 
 
 
@@ -31,17 +33,31 @@ namespace SudokuVisualization
             sudokuBoard.hideRandomBoard(totalHiddenNum); //Hide the wanted number of cells.
             sudokuBoard2 = sudokuBoard.ReturnBoardFromCells(sudokuBoard);
 
+            List<int[,]> solutionSteps = new List<int[,]>();
+            SolveSudokuStepByStep(sudokuBoard2, solutionSteps);
+
 
             while (!Raylib.WindowShouldClose())
             {
                 Raylib.BeginDrawing();
+
                 Raylib.ClearBackground(Color.WHITE);
 
                 DrawSudokuBoard();
-                DrawSudokuBoard2();
+                //DrawSudokuBoard2();
+
+
+               
+                 
+                
+
                 DrawGameIsCompletedWithSuccess();
+                DrawGameIsCompletedWithSuccessByBot();
+
                 DrawNumberSelectionUI();
+
                 DrawFalseTryOutOfOppurtunity();
+
                 Raylib.EndDrawing();
             }
 
@@ -74,6 +90,19 @@ namespace SudokuVisualization
                 Raylib.DrawText(output, 20, 400, 20, Color.BLACK);
             }
         }
+
+       
+        private static void DrawGameIsCompletedWithSuccessByBot()
+        {
+            if (totalHiddenNum == filledByUser2)
+            {
+                sudokuCompleted2 = true;
+                string output = "Sudoku completed succesfully by bot";
+                Raylib.DrawText(output, 400, 400, 20, Color.BLACK);
+            }
+        }
+
+
 
         private static void DrawNumberSelectionUI()
         {
@@ -121,6 +150,9 @@ namespace SudokuVisualization
 
             }
 
+
+           
+
             for (int row = 0; row < boardSize; row++)
             {
                 for (int col = 0; col < boardSize; col++)
@@ -141,6 +173,46 @@ namespace SudokuVisualization
 
 
                 }
+
+        
+
+
+        private static bool SolveSudokuStepByStep(Board board, List<int[,]> solutionSteps)
+        {
+            for (int row = 0; row < 9; row++)
+            {
+                for (int col = 0; col < 9; col++)
+                {
+                    if (board.GetBoardValue(row, col) == 0)
+                    {
+                        for (int num = 1; num <= 9; num++)
+                        {
+                            if (Board.isSafe(board.CreateNewBoardFromCells(), row, col, num))
+                            {
+                                board.SetBoardValue(row, col, num);
+                                Console.WriteLine("Solving now, " + row + " " +col + " " + num);
+                                solutionSteps.Add(board.CreateNewBoardFromCells());
+
+                                filledByUser2 += 1;
+                                
+
+                                if (SolveSudokuStepByStep(board, solutionSteps))
+                                {
+                                    return true;
+                                }
+
+                                board.SetBoardValue(row, col, 0);
+                                solutionSteps.Add(board.GetCurrentBoardState());
+                            }
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+
 
 
 

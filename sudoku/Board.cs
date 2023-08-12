@@ -56,7 +56,7 @@ public class Board
             {
                 if (!constantCells[row, col] || userAddedCells[row, col])
                 {
-                    newBoard.SetBoardValue(row, col, board1.GetBoardValue(row,col)); 
+                    newBoard.SetBoardValue(row, col, board1.GetBoardValue(row, col));
                 }
             }
         }
@@ -159,12 +159,12 @@ public class Board
                }
         */
 
-//*
+        //*
         for (int i = 0; i < 9; i++)
         {
             if (board2[row, i] == value)
             {
-                Console.WriteLine("Came Here 1");
+                //  Console.WriteLine("Came Here 1");
                 return false;
             }
         }
@@ -174,7 +174,7 @@ public class Board
         {
             if (board2[i, col] == value)
             {
-                Console.WriteLine("Came Here 2 ");
+                // Console.WriteLine("Came Here 2 ");
                 return false;
             }
         }
@@ -188,12 +188,12 @@ public class Board
             {
                 if (board2[startRow + i, startCol + j] == value)
                 {
-                    Console.WriteLine("Came Here 3 ");
+                    // Console.WriteLine("Came Here 3 ");
                     return false;
                 }
             }
         }
-//*/
+        //*/
 
 
         return true;
@@ -203,6 +203,8 @@ public class Board
 
 
 
+    
+
 
 
     public void SetBoardValue(int row, int col, int num) {
@@ -210,6 +212,11 @@ public class Board
         constantCells[row, col] = false;
         userAddedCells[row, col] = true;
     }
+
+    
+    
+
+    
 
     public bool IsValidPlacement(int row, int col, int num) {
         int[,] board2 = CreateNewBoardFromCells();
@@ -353,6 +360,21 @@ public class Board
         Console.WriteLine("came here returns true");
         return true;
     }
+
+    public int[,] GetCurrentBoardState()
+    {
+        int[,] copy = new int[9, 9];
+        for (int row = 0; row < 9; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                copy[row, col] = board[row, col];
+            }
+        }
+        return copy;
+    }
+
+
 
 
 
