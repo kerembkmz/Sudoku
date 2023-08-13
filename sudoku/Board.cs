@@ -13,6 +13,7 @@ public class Board
     private Random random = new Random();
     private bool safeForUser = false;
     private int totalWrongAnswer = 0;
+    private bool[,] botAddedCells = new bool[9, 9];
 
 
 
@@ -83,6 +84,13 @@ public class Board
     public bool isFilledUser(int row, int col) {
         return userAddedCells[row, col];
     }
+
+    public bool isFilledBot(int row, int col)
+    {
+        return botAddedCells[row, col];
+    }
+
+
 
 
 
@@ -211,12 +219,14 @@ public class Board
         board[row, col] = num;
         constantCells[row, col] = false;
         userAddedCells[row, col] = true;
+        botAddedCells[row, col] = true;
     }
 
     
-    
 
-    
+
+
+
 
     public bool IsValidPlacement(int row, int col, int num) {
         int[,] board2 = CreateNewBoardFromCells();

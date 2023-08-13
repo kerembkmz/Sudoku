@@ -23,10 +23,8 @@ namespace SudokuVisualization
         private static bool sudokuCompleted = false;
         private static bool sudokuCompleted2 = false;
         private static int filledByUser = 0;
-        private static int filledByUser2 = 0;
-        private static int totalHiddenNum = 5;
+        private static int totalHiddenNum = 45;
         private static Board sudokuBoard2 = new Board(); 
-
 
 
         public static void Main()
@@ -47,15 +45,16 @@ namespace SudokuVisualization
                 Raylib.ClearBackground(Color.WHITE);
 
                 DrawSudokuBoard();
-                //DrawSudokuBoard2();
-
-
-
-                SolveSudokuStepByStep( solutionSteps);
                 
 
+
+
+                SolveSudokuStepByStep(solutionSteps);
+
+                DrawSudokuBoard2();
+
                 DrawGameIsCompletedWithSuccess();
-                DrawGameIsCompletedWithSuccessByBot();
+                
 
                 DrawNumberSelectionUI();
 
@@ -90,20 +89,13 @@ namespace SudokuVisualization
             if(totalHiddenNum == filledByUser) {
                 sudokuCompleted = true;
                 string output = "Sudoku completed succesfully";
-                Raylib.DrawText(output, 20, 400, 20, Color.BLACK);
-            }
-        }
-
-       
-        private static void DrawGameIsCompletedWithSuccessByBot()
-        {
-            if (totalHiddenNum == filledByUser2)
-            {
-                sudokuCompleted2 = true;
-                string output = "Sudoku completed succesfully by bot";
                 Raylib.DrawText(output, 400, 400, 20, Color.BLACK);
             }
         }
+
+
+        
+
 
 
 
@@ -144,12 +136,16 @@ namespace SudokuVisualization
                 Raylib.DrawLine(400+x, 20, 400+x, 380, Color.BLACK);
                 Raylib.DrawLine(400, y+20, 760, y+20, Color.BLACK);
 
-                // adding drawings to the 3x3 squares for easier visualization.
+                // adding colored drawings to the 3x3 squares for easier visualization.
                 Raylib.DrawLine(3 * cellSize + 400, 20, 3 * cellSize + 400, 380, Color.BLUE);
+                Raylib.DrawLine(3 * cellSize + 401, 20, 3 * cellSize + 401, 380, Color.DARKBLUE);
                 Raylib.DrawLine(6 * cellSize + 400, 20, 6 * cellSize + 400, 380, Color.BLUE);
+                Raylib.DrawLine(6 * cellSize + 401, 20, 6 * cellSize + 401, 380, Color.DARKBLUE);
 
                 Raylib.DrawLine(400, 3 * cellSize + 20, 760, 3 * cellSize + 20, Color.BLUE);
+                Raylib.DrawLine(400, 3 * cellSize + 21, 760, 3 * cellSize + 21, Color.DARKBLUE);
                 Raylib.DrawLine(400, 6 * cellSize + 20, 760, 6 * cellSize + 20, Color.BLUE);
+                Raylib.DrawLine(400, 6 * cellSize + 21, 760, 6 * cellSize + 21, Color.DARKBLUE);
 
             }
 
@@ -169,6 +165,7 @@ namespace SudokuVisualization
                     bool userOrNot = sudokuBoard2.isFilledUser(row, col);
                     bool botOrNot = sudokuBoard2.isFilledBot(row, col);
 
+
                     if (number != 0 && !hideOrNot)
                     {
                         if (userOrNot)
@@ -185,12 +182,18 @@ namespace SudokuVisualization
                             
                             
                         }
-                        if (sudokuCompleted2)
-                        {
-                            Raylib.DrawText(number.ToString(), x - 5, y - 10, 20, Color.GREEN);
-                        }
+
+                        
+                        
                     }
-                    
+
+                    if (sudokuCompleted2)
+                    {
+                        string output = "Sudoku completed successfully by bot";
+                        Raylib.DrawText(output, 400, 400, 20, Color.BLACK);
+                        Raylib.DrawText(number.ToString(), x - 5, y - 10, 20, Color.GREEN);
+                    }
+
                 }
             }
 
@@ -198,205 +201,13 @@ namespace SudokuVisualization
 
                 }
 
-
-
-        /*
-        private static bool SolveSudokuStepByStep(Board board, List<int[,]> solutionSteps)
-        {
-
-
-            for (int i = 0; i <= boardSize; i++)
-            {
-                int x = i * cellSize;
-                int y = i * cellSize;
-
-                Raylib.DrawLine(400 + x, 20, 400 + x, 380, Color.BLACK);
-                Raylib.DrawLine(400, y + 20, 760, y + 20, Color.BLACK);
-
-                // adding drawings to the 3x3 squares for easier visualization.
-                Raylib.DrawLine(3 * cellSize + 400, 20, 3 * cellSize + 400, 380, Color.BLUE);
-                Raylib.DrawLine(6 * cellSize + 400, 20, 6 * cellSize + 400, 380, Color.BLUE);
-
-                Raylib.DrawLine(400, 3 * cellSize + 20, 760, 3 * cellSize + 20, Color.BLUE);
-                Raylib.DrawLine(400, 6 * cellSize + 20, 760, 6 * cellSize + 20, Color.BLUE);
-
-            }
-
-
-            double currentTime = 0;
-            double DelayTime = 10;
-
-            for (int row = 0; row < 9; row++)
-            {
-                for (int col = 0; col < 9; col++)
-                {
-
-                    int x = col * cellSize + cellSize / 2 + 400;
-                    int y = row * cellSize + cellSize / 2 + 20;
-
-                    int number = sudokuBoard2.GetBoardValue(row, col);
-                    bool hideOrNot = sudokuBoard2.isFilled(row, col);
-
-                    if (number != 0 && !hideOrNot)
-                    {
-                        Raylib.DrawText(number.ToString(), x - 5, y - 10, 20, Color.BLACK);
-                    }
-
-                    if (board.GetBoardValue(row, col) == 0)
-                    {
-
-
-                        for (int num = 1; num <= 9; num++)
-                        {
-                            if (Board.isSafe(board.CreateNewBoardFromCells(), row, col, num))
-                            {
-                                double startTime = Raylib.GetTime();
-
-                                board.SetBoardValue(row, col, num);
-
-                                if (currentTime >= DelayTime)
-                                {
-                                    // Clear the screen
-                                    Raylib.ClearBackground(Color.WHITE);
-
-                                    // Draw the Sudoku board and other UI elements
-                                    DrawSudokuBoard();
-                                    DrawSudokuBoard2();  // Draw the right side of the board
-                                    DrawNumberSelectionUI();
-                                    DrawFalseTryOutOfOppurtunity();
-                                    DrawGameIsCompletedWithSuccess();
-                                    DrawGameIsCompletedWithSuccessByBot();
-
-                                    // Reset the timer
-                                    currentTime = 0;
-
-                                    // Refresh the display
-                                    Raylib.EndDrawing();
-                                }
-
-                                Console.WriteLine(row + " " + col + " " + num);
-                                // Increase the timer
-                                currentTime += Raylib.GetFrameTime();
-
-                                solutionSteps.Add(board.CreateNewBoardFromCells());
-
-                                if (SolveSudokuStepByStep(board, solutionSteps))
-                                {
-                                    return true;
-                                }
-
-                                board.SetBoardValue(row, col, 0);
-                                solutionSteps.Add(board.GetCurrentBoardState());
-
-                                double endTime = Raylib.GetTime();
-                                double elapsedTime = endTime - startTime;
-
-                                if (elapsedTime < DelayTime)
-                                {
-                                    Raylib.WaitTime((float)(DelayTime - elapsedTime) * 1000000); // Convert to milliseconds
-                                }
-
-                            }
-                            }
-                            return false;
-                        }
-                    }
-
-                }
-
-                return true;
-            }
-        
-        
-        */
-        // ... (previous code)
-
-        /*
-        private static bool SolveSudokuStepByStep(Board board, List<int[,]> solutionSteps)
-        {
-            double currentTime = 0;
-            double moveInterval = 3; // Move every 3 seconds
-            bool madeMove = false;
-
-            for (int row = 0; row < 9; row++)
-            {
-                for (int col = 0; col < 9; col++)
-                {
-                    int x = col * cellSize + cellSize / 2 + 400;
-                    int y = row * cellSize + cellSize / 2 + 20;
-
-                    int number = sudokuBoard2.GetBoardValue(row, col);
-                    bool hideOrNot = sudokuBoard2.isFilled(row, col);
-
-                    if (number != 0 && !hideOrNot)
-                    {
-                        Raylib.DrawText(number.ToString(), x - 5, y - 10, 20, Color.BLACK);
-                    }
-
-                    if (board.GetBoardValue(row, col) == 0)
-                    {
-                        for (int num = 1; num <= 9; num++)
-                        {
-                            if (Board.isSafe(board.CreateNewBoardFromCells(), row, col, num))
-                            {
-                                double startTime = Raylib.GetTime();
-
-                                
-
-                                if (!madeMove && currentTime >= moveInterval)
-                                {
-                                    // Clear the screen
-                                    Raylib.ClearBackground(Color.WHITE);
-
-                                    // Draw the Sudoku board and other UI elements
-                                    DrawSudokuBoard();
-                                    DrawSudokuBoard2();  // Draw the right side of the board
-                                    DrawNumberSelectionUI();
-                                    DrawFalseTryOutOfOppurtunity();
-                                    DrawGameIsCompletedWithSuccess();
-                                    DrawGameIsCompletedWithSuccessByBot();
-
-                                    // Reset the timer
-                                    currentTime = 0;
-
-                                    // Refresh the display
-                                    Raylib.EndDrawing();
-                                }
-
-                                if (!madeMove && currentTime >= moveInterval)
-                                {
-                                    // Add the move to the board
-                                    
-                                    madeMove = true;
-                                }
-
-                                double endTime = Raylib.GetTime();
-                                double elapsedTime = endTime - startTime;
-
-                                // Update current time
-                                currentTime += elapsedTime;
-
-                                if (madeMove && currentTime >= moveInterval)
-                                {
-                                    madeMove = false;
-                                    currentTime = 0;
-                                }
-                            }
-                        }
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        */
 
         private static bool SolveSudokuStepByStep(List<int[,]> solutionSteps)
         {
+            //The commands lines will show the solutions logic in the output, for debugging purposes.
+
             double currentTime = 0;
-            double moveInterval = 3; // Move every 3 seconds
+            double moveInterval = 4; // Move every 3 seconds
 
             for (int row = 0; row < 9; row++)
             {
@@ -406,60 +217,59 @@ namespace SudokuVisualization
                     {
                         for (int num = 1; num <= 9; num++)
                         {
+                            double startTime = Raylib.GetTime();
+
+                            
+                            while (currentTime < moveInterval)
+                            {
+                                currentTime = Raylib.GetTime() - startTime;
+
+                                
+                                Raylib.ClearBackground(Color.WHITE);
+
+                                
+                                DrawSudokuBoard();
+                                DrawSudokuBoard2();  
+                                DrawNumberSelectionUI();
+                                DrawFalseTryOutOfOppurtunity();
+                                DrawGameIsCompletedWithSuccess();
+                                
+
+                                
+                                Raylib.EndDrawing();
+                            }
+
                             if (Board.isSafe(sudokuBoard2.CreateNewBoardFromCells(), row, col, num))
                             {
-                                double startTime = Raylib.GetTime();
-
-                                // Wait for the specified interval before making a move
-                                while (currentTime < moveInterval)
-                                {
-                                    currentTime = Raylib.GetTime() - startTime;
-
-                                    // Clear the screen
-                                    Raylib.ClearBackground(Color.WHITE);
-
-                                    // Draw the Sudoku board and other UI elements
-                                    DrawSudokuBoard();
-                                    DrawSudokuBoard2();  // Draw the right side of the board
-                                    DrawNumberSelectionUI();
-                                    DrawFalseTryOutOfOppurtunity();
-                                    DrawGameIsCompletedWithSuccess();
-                                    DrawGameIsCompletedWithSuccessByBot();
-
-                                    // Refresh the display
-                                    Raylib.EndDrawing();
-                                }
-
-                                // Add the move to the board
                                 sudokuBoard2.SetBoardValue(row, col, num);
+
+                                //Console.WriteLine("Adding " + row + " " + col + ":" + num);
+                                solutionSteps.Add(sudokuBoard2.CreateNewBoardFromCells());
+
+                                if (SolveSudokuStepByStep(solutionSteps))
+                                {
+                                    return true; // Successfully solved
+                                }
+                                
+                                sudokuBoard2.SetBoardValue(row, col, 0);
                                 solutionSteps.Add(sudokuBoard2.CreateNewBoardFromCells());
 
                                 double endTime = Raylib.GetTime();
                                 double elapsedTime = endTime - startTime;
 
-                                // Update current time
+                                
                                 currentTime += elapsedTime;
                             }
                         }
-                        return false;
+                        //Console.WriteLine("Backtracking to " + row + " " + col);
+                        return false; //Backtrack
                     }
                 }
             }
 
-            return true;
+            sudokuCompleted2 = true;
+            return true; 
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
         private static void DrawSudokuBoard()
         {
@@ -485,10 +295,14 @@ namespace SudokuVisualization
 
                 // adding drawings to the 3x3 squares for easier visualization.
                 Raylib.DrawLine(3 * cellSize + 10, 20, 3 * cellSize + 10, 380, Color.BLUE);
+                Raylib.DrawLine(3 * cellSize + 11, 20, 3 * cellSize + 11, 380, Color.DARKBLUE);
                 Raylib.DrawLine(6 * cellSize + 10, 20, 6 * cellSize + 10, 380, Color.BLUE);
+                Raylib.DrawLine(6 * cellSize + 11, 20, 6 * cellSize + 11, 380, Color.DARKBLUE);
 
                 Raylib.DrawLine(10 , 3*cellSize +20, 370 , 3*cellSize+20, Color.BLUE);
+                Raylib.DrawLine(10, 3 * cellSize + 21, 370, 3 * cellSize + 21, Color.DARKBLUE);
                 Raylib.DrawLine(10 , 6*cellSize +20, 370, 6*cellSize+20, Color.BLUE);
+                Raylib.DrawLine(10, 6 * cellSize + 21, 370, 6 * cellSize + 21, Color.DARKBLUE);
 
             }
 
@@ -500,7 +314,6 @@ namespace SudokuVisualization
                     int x = col * cellSize + cellSize / 2;
                     int y = row * cellSize + cellSize / 2;
 
-                    // Draw the number in each cell
                     int number = sudokuBoard.GetBoardValue(row, col);
                     bool hideOrNot = sudokuBoard.isFilled(row, col);
                     bool userOrNot = sudokuBoard.isFilledUser(row, col);
@@ -508,7 +321,6 @@ namespace SudokuVisualization
                     {
                         if (userOrNot)
                         {
-                            //Console.WriteLine($"safeForUser second check {safeForUser}");
                             if (safeForUser)
                             {
                                 Raylib.DrawText(number.ToString(), x + 5, y + 10, 20, Color.DARKGRAY);
@@ -525,6 +337,7 @@ namespace SudokuVisualization
 
                         }
                     }
+
                     if (sudokuCompleted) {
                         Raylib.DrawText(number.ToString(), x + 5, y + 10, 20, Color.GREEN);
                     }
